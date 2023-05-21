@@ -1,4 +1,4 @@
-local main = Instance.new("ScreenGui")
+local mainfly = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
 local up = Instance.new("TextButton")
 local down = Instance.new("TextButton")
@@ -11,12 +11,12 @@ local closebutton = Instance.new("TextButton")
 local mini = Instance.new("TextButton")
 local mini2 = Instance.new("TextButton") 
 
-main.Name = "main"
-main.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-main.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-main.ResetOnSpawn = false 
+mainfly.Name = "mainfly"
+mainfly.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+mainfly.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+mainfly.ResetOnSpawn = false 
 
-Frame.Parent = main
+Frame.Parent = mainfly
 Frame.BackgroundColor3 = Color3.fromRGB(163, 255, 137)
 Frame.BackgroundTransparency = 1
 
