@@ -6,4 +6,4 @@ Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=108344585
 	Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=1083455352"
 	Animate.climb.ClimbAnim.AnimationId = "http://www.roblox.com/asset/?id=1083439238"
 	Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=1083443587"
-	game.Players.LocalPlayer.Character.Humanoid.Jump = true
+	game.Players.LocalPlayer.Character.Humanoid.Health = 0
