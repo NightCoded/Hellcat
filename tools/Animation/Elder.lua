@@ -1,3 +1,5 @@
+game.Players.LocalPlayer.Character.Humanoid.Health = 0
+wait(2)
 local Animate = game.Players.LocalPlayer.Character.Animate
 Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=845397899"
 	Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=845400520"
@@ -6,4 +8,4 @@ Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=845397899
 	Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=845398858"
 	Animate.climb.ClimbAnim.AnimationId = "http://www.roblox.com/asset/?id=845392038"
 	Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=845396048"
-	game.Players.LocalPlayer.Character.Humanoid.Health = 0
+	
