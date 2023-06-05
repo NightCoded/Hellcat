@@ -1,6 +1,4 @@
-game.Players.LocalPlayer.Character.Humanoid.Health = 0
-game.Players.LocalPlayer.CharacterAdded:Connect(function()
-wait(0.5)
+
 local Animate = game.Players.LocalPlayer.Character.Animate
 Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=1083445855"
 	Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=1083450166"
@@ -9,4 +7,4 @@ Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=108344585
 	Animate.jump.JumpAnim.AnimationId = "http://www.roblox.com/asset/?id=1083455352"
 	Animate.climb.ClimbAnim.AnimationId = "http://www.roblox.com/asset/?id=1083439238"
 	Animate.fall.FallAnim.AnimationId = "http://www.roblox.com/asset/?id=1083443587"
-	end)
+	
