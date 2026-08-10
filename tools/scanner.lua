@@ -1,6 +1,6 @@
 -- =====================================================================
 -- PROJECT: SADBOY XD - SCRIPT SCANNER V15 (ULTIMATE NATIVE LUA.EXPERT)
--- STATUS: FULL CODE - NO TRUNCATION - MOBILE FRIENDLY
+-- STATUS: FULL CODE + LIVE SEARCH - MOBILE FRIENDLY
 -- =====================================================================
 
 local Players = game:GetService("Players")
@@ -25,7 +25,7 @@ if TargetParent:FindFirstChild("SadBoy_Scanner_V15") then
 end
 
 -- =====================================================================
--- 1. MODERN UI CONSTRUCTION (DARK THEME & TABS)
+-- 1. MODERN UI CONSTRUCTION (DARK THEME & TABS + SEARCH)
 -- =====================================================================
 
 local ScreenGui = Instance.new("ScreenGui")
@@ -35,8 +35,8 @@ ScreenGui.Parent = TargetParent
 
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 320, 0, 290)
-MainFrame.Position = UDim2.new(0.5, -160, 0.5, -145)
+MainFrame.Size = UDim2.new(0, 320, 0, 320) -- sedikit lebih tinggi agar muat search box
+MainFrame.Position = UDim2.new(0.5, -160, 0.5, -160)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 17)
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
@@ -146,9 +146,27 @@ local BtnCorner = Instance.new("UICorner")
 BtnCorner.CornerRadius = UDim.new(0, 6)
 BtnCorner.Parent = ScanBtn
 
+-- ===== SEARCH BOX BARU =====
+local SearchBox = Instance.new("TextBox")
+SearchBox.Size = UDim2.new(1, -24, 0, 28)
+SearchBox.Position = UDim2.new(0, 12, 0, 50) -- di bawah ScanBtn
+SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+SearchBox.PlaceholderText = "Search script name..."
+SearchBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+SearchBox.Font = Enum.Font.Gotham
+SearchBox.TextSize = 12
+SearchBox.ClearTextOnFocus = false
+SearchBox.Parent = Content
+
+local SearchCorner = Instance.new("UICorner")
+SearchCorner.CornerRadius = UDim.new(0, 4)
+SearchCorner.Parent = SearchBox
+-- ===== END SEARCH BOX =====
+
 local Scroll = Instance.new("ScrollingFrame")
-Scroll.Size = UDim2.new(1, -24, 1, -60)
-Scroll.Position = UDim2.new(0, 12, 0, 50)
+Scroll.Size = UDim2.new(1, -24, 1, -92) -- menyesuaikan karena ada search box (50+28=78, plus padding bawah)
+Scroll.Position = UDim2.new(0, 12, 0, 86)
 Scroll.BackgroundTransparency = 1
 Scroll.BorderSizePixel = 0
 Scroll.ScrollBarThickness = 2
@@ -162,10 +180,11 @@ UIList.SortOrder = Enum.SortOrder.LayoutOrder
 UIList.Parent = Scroll
 
 -- =====================================================================
--- 2. LOGIKA TAB & FILTERING
+-- 2. LOGIKA TAB & SEARCH FILTERING
 -- =====================================================================
 
 local currentTab = "LocalScript"
+local searchText = "" -- variabel pencarian
 
 local function updateCanvas()
     local count = 0
@@ -174,6 +193,33 @@ local function updateCanvas()
     end
     Scroll.CanvasSize = UDim2.new(0, 0, 0, count * 37)
 end
+
+-- Fungsi utama filter (tab + search)
+local function applyFilter()
+    local s = searchText:lower()
+    for _, item in ipairs(Scroll:GetChildren()) do
+        if item:IsA("TextButton") then
+            local classVal = item:FindFirstChild("ObjClass")
+            if classVal and classVal.Value == currentTab then
+                local nameLabel = item:FindFirstChild("NameLabel")
+                if nameLabel then
+                    item.Visible = (s == "" or nameLabel.Text:lower():find(s, 1, true) ~= nil)
+                else
+                    item.Visible = true
+                end
+            else
+                item.Visible = false
+            end
+        end
+    end
+    updateCanvas()
+end
+
+-- Event pencarian real‑time
+SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    searchText = SearchBox.Text
+    applyFilter()
+end)
 
 local function switchTab(tabType)
     currentTab = tabType
@@ -192,14 +238,7 @@ local function switchTab(tabType)
         ScanBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 100)
         TabIndicator:TweenPosition(UDim2.new(0.5, 0, 1, -2), "Out", "Quad", 0.2, true)
     end
-    
-    for _, item in pairs(Scroll:GetChildren()) do
-        if item:IsA("TextButton") then
-            local classVal = item:FindFirstChild("ObjClass")
-            if classVal then item.Visible = (classVal.Value == tabType) end
-        end
-    end
-    updateCanvas()
+    applyFilter() -- langsung terapkan filter + search
 end
 
 TabScriptBtn.MouseButton1Click:Connect(function() switchTab("LocalScript") end)
@@ -340,6 +379,7 @@ local function createItem(obj)
     IconCorner.Parent = Icon
 
     local NameLabel = Instance.new("TextLabel")
+    NameLabel.Name = "NameLabel" -- agar mudah diambil nanti
     NameLabel.Size = UDim2.new(1, -40, 1, 0)
     NameLabel.Position = UDim2.new(0, 36, 0, 0)
     NameLabel.BackgroundTransparency = 1
@@ -418,7 +458,7 @@ ScanBtn.MouseButton1Click:Connect(function()
             end
         end
         
-        updateCanvas()
+        applyFilter() -- terapkan search saat ini setelah scan
         ScanBtn.Text = "FOUND " .. totalScanned .. " FILES"
         task.wait(1.5)
         ScanBtn.Text = "SCAN NEW SCRIPTS"
@@ -445,9 +485,8 @@ MinBtn.MouseButton1Click:Connect(function()
     isMin = not isMin
     TabContainer.Visible = not isMin
     Content.Visible = not isMin
-    MainFrame:TweenSize(isMin and UDim2.new(0, 320, 0, 35) or UDim2.new(0, 320, 0, 290), "Out", "Quad", 0.2, true)
+    MainFrame:TweenSize(isMin and UDim2.new(0, 320, 0, 35) or UDim2.new(0, 320, 0, 320), "Out", "Quad", 0.2, true)
     MinBtn.Text = isMin and "+" or "−"
 end)
 
 RunService.Heartbeat:Connect(function() end)
-
